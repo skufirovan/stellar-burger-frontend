@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from '@store';
-import { checkAuth } from '@slices/userSlice/userSlice';
+import { checkAuth } from '@slices/userSlice';
 import {
   ConstructorPage,
   Feed,
