@@ -5,9 +5,13 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 import { userReducer } from '@slices/userSlice';
+import { ingredientsReducer } from '@slices/ingredientsSlice';
+import { modalReducer } from '@slices/modalSlice';
 
 const rootReducer = combineReducers({
-  user: userReducer
+  user: userReducer,
+  ingredients: ingredientsReducer,
+  modal: modalReducer
 });
 
 const store = configureStore({

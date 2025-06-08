@@ -1,7 +1,8 @@
-import { useRef, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { useDispatch } from '@store';
+import { useRef, useEffect, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '@store';
 import { checkAuth } from '@slices/userSlice';
+import { closeModal, isOpenSelector } from '@slices/modalSlice';
 import {
   ConstructorPage,
   Feed,
@@ -13,13 +14,21 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { AppHeader, ProtectedRoute } from '@components';
+import {
+  AppHeader,
+  IngredientDetails,
+  Modal,
+  ProtectedRoute
+} from '@components';
 import { getCookie } from '@utils/cookie';
 import '../../index.css';
 import styles from './app.module.css';
 
 const App = () => {
+  const isModalOpen = useSelector(isOpenSelector);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const backgroundLocation = location.state?.background;
   const isCalledRef = useRef(false);
 
   useEffect(() => {
@@ -29,12 +38,17 @@ const App = () => {
     }
   }, [dispatch]);
 
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+  };
+
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes>
-        <Route path='/' element={<ConstructorPage />} />
+      <Routes location={backgroundLocation || location}>
+        <Route index element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/ingredients/:id' element={<ConstructorPage />} />
         <Route
           path='/login'
           element={
@@ -85,6 +99,21 @@ const App = () => {
         />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/ingredients/:id'
+            element={
+              isModalOpen && (
+                <Modal title='Детали ингредиента' onClose={handleCloseModal}>
+                  <IngredientDetails />
+                </Modal>
+              )
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 };
