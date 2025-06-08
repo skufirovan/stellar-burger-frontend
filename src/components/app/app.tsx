@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '@store';
 import { checkAuth } from '@slices/userSlice';
+import { fetchIngredients, fetchFeeds } from '@slices/burgerSlice';
 import { closeModal, isOpenSelector } from '@slices/modalSlice';
 import {
   ConstructorPage,
@@ -32,9 +33,23 @@ const App = () => {
   const isCalledRef = useRef(false);
 
   useEffect(() => {
-    if (getCookie('accessToken') && !isCalledRef.current) {
+    if (!isCalledRef.current) {
       isCalledRef.current = true;
-      dispatch(checkAuth());
+
+      const savedIngredients = sessionStorage.getItem('ingredients');
+      const savedOrders = sessionStorage.getItem('orders');
+
+      if (!savedIngredients) {
+        dispatch(fetchIngredients());
+      }
+
+      if (!savedOrders) {
+        dispatch(fetchFeeds());
+      }
+
+      if (getCookie('accessToken')) {
+        dispatch(checkAuth());
+      }
     }
   }, [dispatch]);
 
