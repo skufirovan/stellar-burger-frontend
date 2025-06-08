@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router';
 import { useSelector } from '@store';
-import { userSelector } from '@slices/userSlice/userSlice';
+import { isLoadingSelector, userSelector } from '@slices/userSlice/userSlice';
+import { Preloader } from '@ui';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -12,6 +13,11 @@ export const ProtectedRoute = ({
   children
 }: ProtectedRouteProps) => {
   const user = useSelector(userSelector);
+  const isLoading = useSelector(isLoadingSelector);
+
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   if (!onlyUnAuth && !user) {
     return <Navigate replace to='/login' />;

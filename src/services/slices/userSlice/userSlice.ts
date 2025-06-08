@@ -4,7 +4,8 @@ import {
   logoutApi,
   registerUserApi,
   TLoginData,
-  TRegisterData
+  TRegisterData,
+  updateUserApi
 } from '@api';
 import {
   createAsyncThunk,
@@ -13,6 +14,7 @@ import {
   PayloadAction
 } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
+import { deleteCookie, setCookie } from '@utils/cookie';
 
 export const registration = createAsyncThunk(
   'auth/registration',
@@ -20,6 +22,7 @@ export const registration = createAsyncThunk(
     try {
       const res = await registerUserApi({ email, name, password });
       localStorage.setItem('refreshToken', res.refreshToken);
+      setCookie('accessToken', res.accessToken);
       return res.user;
     } catch (err) {
       return thunkAPI.rejectWithValue(err);
@@ -33,6 +36,7 @@ export const login = createAsyncThunk(
     try {
       const res = await loginUserApi({ email, password });
       localStorage.setItem('refreshToken', res.refreshToken);
+      setCookie('accessToken', res.accessToken);
       return res.user;
     } catch (err) {
       return thunkAPI.rejectWithValue(err);
@@ -44,6 +48,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
     await logoutApi();
     localStorage.removeItem('refreshToken');
+    deleteCookie('accessToken');
     return null;
   } catch (err) {
     return thunkAPI.rejectWithValue(err);
@@ -55,6 +60,18 @@ export const checkAuth = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await getUserApi();
+      return res.user;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+export const updateUserInfo = createAsyncThunk(
+  'user/update',
+  async ({ email, name, password }: TRegisterData, thunkAPI) => {
+    try {
+      const res = await updateUserApi({ email, name, password });
       return res.user;
     } catch (err) {
       return thunkAPI.rejectWithValue(err);
@@ -91,12 +108,17 @@ const userSlice = createSlice({
         state.isAuth = false;
       })
 
+      .addCase(updateUserInfo.rejected, (state) => {
+        state.isLoading = false;
+      })
+
       .addMatcher(
         isAnyOf(
           login.pending,
           registration.pending,
           logout.pending,
-          checkAuth.pending
+          checkAuth.pending,
+          updateUserInfo.pending
         ),
         (state) => {
           state.isLoading = true;
@@ -116,7 +138,12 @@ const userSlice = createSlice({
       )
 
       .addMatcher(
-        isAnyOf(login.fulfilled, registration.fulfilled, checkAuth.fulfilled),
+        isAnyOf(
+          login.fulfilled,
+          registration.fulfilled,
+          checkAuth.fulfilled,
+          updateUserInfo.fulfilled
+        ),
         (state, action: PayloadAction<TUser>) => {
           state.user = action.payload;
           state.isLoading = false;

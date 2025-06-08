@@ -75,6 +75,7 @@ module.exports = {
       '@components': path.resolve(__dirname, './src/components'),
       '@ui': path.resolve(__dirname, './src/components/ui'),
       '@ui-pages': path.resolve(__dirname, './src/components/ui/pages'),
+      '@utils': path.resolve(__dirname, './src/utils'),
       '@utils-types': path.resolve(__dirname, './src/utils/types'),
       '@api': path.resolve(__dirname, './src/utils/burger-api.ts'),
       '@store': path.resolve(__dirname, './src/services/store.ts'),
