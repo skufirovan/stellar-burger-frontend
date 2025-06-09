@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ReactNode } from 'react';
+import { createSlice } from '@reduxjs/toolkit';
 
 type ModalState = {
   isOpen: boolean;
