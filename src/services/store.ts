@@ -7,11 +7,13 @@ import {
 import { userReducer } from '@slices/userSlice';
 import { burgerReducer } from '@slices/burgerSlice';
 import { modalReducer } from '@slices/modalSlice';
+import { burgerConstructorReducer } from '@slices/burgerConstructorSlice';
 
 const rootReducer = combineReducers({
   user: userReducer,
   burger: burgerReducer,
-  modal: modalReducer
+  modal: modalReducer,
+  burgerConstructor: burgerConstructorReducer
 });
 
 const store = configureStore({
