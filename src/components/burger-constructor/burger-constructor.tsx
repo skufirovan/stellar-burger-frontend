@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '@store';
-import { isAuthSelector } from '@slices/userSlice';
+import { getOrders, isAuthSelector } from '@slices/userSlice';
 import { closeModal, openModal } from '@slices/modalSlice';
 import {
   constructorItemsSelector,
@@ -36,7 +36,7 @@ export const BurgerConstructor: FC = () => {
           constructorItems.bun._id
         ])
       );
-
+      dispatch(getOrders());
       dispatch(openModal());
     }
   };

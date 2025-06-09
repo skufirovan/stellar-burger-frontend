@@ -1,4 +1,5 @@
 import {
+  getOrdersApi,
   getUserApi,
   loginUserApi,
   logoutApi,
@@ -13,7 +14,7 @@ import {
   isAnyOf,
   PayloadAction
 } from '@reduxjs/toolkit';
-import { TUser } from '@utils-types';
+import { TOrder, TUser } from '@utils-types';
 import { deleteCookie, setCookie } from '@utils/cookie';
 
 export const registration = createAsyncThunk(
@@ -79,14 +80,28 @@ export const updateUserInfo = createAsyncThunk(
   }
 );
 
+export const getOrders = createAsyncThunk(
+  'user/orders',
+  async (_, thunkAPI) => {
+    try {
+      const res = await getOrdersApi();
+      return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
 type TUserState = {
   user: TUser | null;
+  orders: TOrder[];
   isAuth: boolean;
   isLoading: boolean;
 };
 
 const initialState: TUserState = {
   user: null,
+  orders: [],
   isAuth: false,
   isLoading: false
 };
@@ -97,6 +112,7 @@ const userSlice = createSlice({
   reducers: {},
   selectors: {
     userSelector: (state) => state.user,
+    ordersSelector: (state) => state.orders,
     isAuthSelector: (state) => state.isAuth,
     isLoadingSelector: (state) => state.isLoading
   },
@@ -104,13 +120,25 @@ const userSlice = createSlice({
     builder
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        state.orders = [];
         state.isLoading = false;
         state.isAuth = false;
       })
 
-      .addCase(updateUserInfo.rejected, (state) => {
-        state.isLoading = false;
-      })
+      .addCase(
+        getOrders.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.orders = action.payload;
+          state.isLoading = false;
+        }
+      )
+
+      .addMatcher(
+        isAnyOf(updateUserInfo.rejected, getOrders.rejected),
+        (state) => {
+          state.isLoading = false;
+        }
+      )
 
       .addMatcher(
         isAnyOf(
@@ -118,7 +146,8 @@ const userSlice = createSlice({
           registration.pending,
           logout.pending,
           checkAuth.pending,
-          updateUserInfo.pending
+          updateUserInfo.pending,
+          getOrders.pending
         ),
         (state) => {
           state.isLoading = true;
@@ -153,6 +182,10 @@ const userSlice = createSlice({
   }
 });
 
-export const { userSelector, isAuthSelector, isLoadingSelector } =
-  userSlice.selectors;
+export const {
+  userSelector,
+  isAuthSelector,
+  isLoadingSelector,
+  ordersSelector
+} = userSlice.selectors;
 export const userReducer = userSlice.reducer;
