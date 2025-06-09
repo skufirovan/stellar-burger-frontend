@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from './app-header.module.css';
+import { Link, NavLink } from 'react-router-dom';
 import { TAppHeaderUIProps } from './type';
 import {
   BurgerIcon,
@@ -7,7 +7,7 @@ import {
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import styles from './app-header.module.css';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
   <header className={styles.header}>
@@ -15,21 +15,25 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
       <div className={styles.menu_part_left}>
         <>
           <BurgerIcon type={'primary'} />
-          <Link
+          <NavLink
             to='/'
-            className={`${styles.link} text text_type_main-default ml-2 mr-10`}
+            className={({ isActive }) =>
+              `${styles.link} text text_type_main-default ml-2 mr-10 ${isActive ? styles.link_active : ''}`
+            }
           >
             Конструктор
-          </Link>
+          </NavLink>
         </>
         <>
           <ListIcon type={'primary'} />
-          <Link
+          <NavLink
             to='feed'
-            className={`${styles.link} text text_type_main-default ml-2 mr-10`}
+            className={({ isActive }) =>
+              `${styles.link} text text_type_main-default ml-2 mr-10 ${isActive ? styles.link_active : ''}`
+            }
           >
             Лента заказов
-          </Link>
+          </NavLink>
         </>
       </div>
       <div className={styles.logo}>
@@ -39,12 +43,14 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
       </div>
       <div className={styles.link_position_last}>
         <ProfileIcon type={'primary'} />
-        <Link
+        <NavLink
           to='/profile'
-          className={`${styles.link} text text_type_main-default ml-2 mr-10`}
+          className={({ isActive }) =>
+            `${styles.link} text text_type_main-default ml-2 mr-10 ${isActive ? styles.link_active : ''}`
+          }
         >
           {userName || 'Личный кабинет'}
-        </Link>
+        </NavLink>
       </div>
     </nav>
   </header>
