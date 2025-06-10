@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '@store';
-import { checkAuth } from '@slices/userSlice';
+import { checkAuth, getOrders } from '@slices/userSlice';
 import { fetchIngredients, fetchFeeds } from '@slices/burgerSlice';
 import { closeModal, isOpenSelector } from '@slices/modalSlice';
 import {
@@ -19,6 +19,7 @@ import {
   AppHeader,
   IngredientDetails,
   Modal,
+  OrderInfo,
   ProtectedRoute
 } from '@components';
 import { getCookie } from '@utils/cookie';
@@ -49,6 +50,7 @@ const App = () => {
 
       if (getCookie('accessToken')) {
         dispatch(checkAuth());
+        dispatch(getOrders());
       }
     }
   }, [dispatch]);
@@ -123,6 +125,26 @@ const App = () => {
               isModalOpen && (
                 <Modal title='Детали ингредиента' onClose={handleCloseModal}>
                   <IngredientDetails />
+                </Modal>
+              )
+            }
+          />
+          <Route
+            path='/feed/:number'
+            element={
+              isModalOpen && (
+                <Modal title='Детали заказа' onClose={handleCloseModal}>
+                  <OrderInfo />
+                </Modal>
+              )
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              isModalOpen && (
+                <Modal title='Детали заказа' onClose={handleCloseModal}>
+                  <OrderInfo />
                 </Modal>
               )
             }
