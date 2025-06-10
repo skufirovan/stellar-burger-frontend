@@ -43,6 +43,12 @@ const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
+    clearBurgerConstructor: (state) => {
+      state.constructorItems = {
+        bun: null,
+        ingredients: []
+      };
+    },
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       const newItem: TConstructorIngredient = {
         ...action.payload,
@@ -138,7 +144,8 @@ export const {
   addIngredient,
   deleteIngredient,
   moveUpIngredient,
-  moveDownIngredient
+  moveDownIngredient,
+  clearBurgerConstructor
 } = burgerConstructorSlice.actions;
 export const {
   constructorItemsSelector,

@@ -7,7 +7,8 @@ import {
   constructorItemsSelector,
   orderRequestSelector,
   orderModalDataSelector,
-  orderBurger
+  orderBurger,
+  clearBurgerConstructor
 } from '@slices/burgerConstructorSlice';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
@@ -38,6 +39,7 @@ export const BurgerConstructor: FC = () => {
       );
       dispatch(getOrders());
       dispatch(openModal());
+      dispatch(clearBurgerConstructor());
     }
   };
 
