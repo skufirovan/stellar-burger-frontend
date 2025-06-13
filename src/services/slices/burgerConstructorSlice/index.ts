@@ -49,6 +49,9 @@ const burgerConstructorSlice = createSlice({
         ingredients: []
       };
     },
+    setOrderRequest: (state, action: PayloadAction<boolean>) => {
+      state.orderRequest = action.payload;
+    },
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       const newItem: TConstructorIngredient = {
         ...action.payload,
@@ -145,7 +148,8 @@ export const {
   deleteIngredient,
   moveUpIngredient,
   moveDownIngredient,
-  clearBurgerConstructor
+  clearBurgerConstructor,
+  setOrderRequest
 } = burgerConstructorSlice.actions;
 export const {
   constructorItemsSelector,

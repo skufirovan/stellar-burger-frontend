@@ -8,7 +8,8 @@ import {
   orderRequestSelector,
   orderModalDataSelector,
   orderBurger,
-  clearBurgerConstructor
+  clearBurgerConstructor,
+  setOrderRequest
 } from '@slices/burgerConstructorSlice';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
@@ -45,6 +46,7 @@ export const BurgerConstructor: FC = () => {
 
   const closeOrderModal = () => {
     dispatch(closeModal());
+    dispatch(setOrderRequest(false));
   };
 
   const price = useMemo(

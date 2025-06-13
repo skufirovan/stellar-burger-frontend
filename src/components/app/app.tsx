@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '@store';
 import { checkAuth, getOrders } from '@slices/userSlice';
@@ -30,6 +30,7 @@ const App = () => {
   const isModalOpen = useSelector(isOpenSelector);
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
   const backgroundLocation = location.state?.background;
   const isCalledRef = useRef(false);
 
@@ -57,6 +58,12 @@ const App = () => {
 
   const handleCloseModal = () => {
     dispatch(closeModal());
+
+    if (location.state?.background) {
+      navigate(-1);
+    } else {
+      navigate('/', { replace: true });
+    }
   };
 
   return (
