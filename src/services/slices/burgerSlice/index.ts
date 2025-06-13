@@ -32,7 +32,7 @@ export const fetchFeeds = createAsyncThunk(
   }
 );
 
-type TBurgerState = {
+export type TBurgerState = {
   ingredients: TIngredient[];
   orders: TOrder[];
   ordersInfo: {

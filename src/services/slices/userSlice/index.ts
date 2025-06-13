@@ -92,7 +92,7 @@ export const getOrders = createAsyncThunk(
   }
 );
 
-type TUserState = {
+export type TUserState = {
   user: TUser | null;
   orders: TOrder[];
   isAuth: boolean;

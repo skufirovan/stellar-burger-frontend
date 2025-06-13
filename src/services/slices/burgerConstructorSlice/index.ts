@@ -21,7 +21,7 @@ export const orderBurger = createAsyncThunk<
   }
 });
 
-type TConstructorState = {
+export type TConstructorState = {
   constructorItems: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];

@@ -9,7 +9,7 @@ import { burgerReducer } from '@slices/burgerSlice';
 import { modalReducer } from '@slices/modalSlice';
 import { burgerConstructorReducer } from '@slices/burgerConstructorSlice';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   user: userReducer,
   burger: burgerReducer,
   modal: modalReducer,
