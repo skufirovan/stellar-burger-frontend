@@ -52,17 +52,22 @@ const burgerConstructorSlice = createSlice({
     setOrderRequest: (state, action: PayloadAction<boolean>) => {
       state.orderRequest = action.payload;
     },
-    addIngredient: (state, action: PayloadAction<TIngredient>) => {
-      const newItem: TConstructorIngredient = {
-        ...action.payload,
-        id: nanoid()
-      };
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        const newItem = action.payload;
 
-      if (newItem.type === 'bun') {
-        state.constructorItems.bun = newItem;
-      } else {
-        state.constructorItems.ingredients.push(newItem);
-      }
+        if (newItem.type === 'bun') {
+          state.constructorItems.bun = newItem;
+        } else {
+          state.constructorItems.ingredients.push(newItem);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: {
+          ...ingredient,
+          id: nanoid()
+        }
+      })
     },
     deleteIngredient: (
       state,
