@@ -1,3 +1,5 @@
+import { SELECTORS } from '../selectors';
+
 describe('Оформление заказа', () => {
   beforeEach(() => {
     cy.setCookie('accessToken', 'test-access-token');
@@ -15,55 +17,45 @@ describe('Оформление заказа', () => {
       body: {
         success: true,
         name: 'Test Burger',
-        order: {
-          number: 1234
-        }
+        order: { number: 1234 }
       }
     }).as('postOrder');
 
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
     cy.wait(['@getUser', '@getIngredients']);
   });
 
-  it('добавляет булку и начинку в конструктор', () => {
-    cy.get('[data-cy="ingredient-bun-643d69a5c3f7b9001cfa093c"]').within(() => {
+  it('добавляет булку и начинку в конструктор и оформляет заказ', () => {
+    cy.get(SELECTORS.bunItem).within(() => {
       cy.contains('Добавить').click({ force: true });
     });
 
-    cy.get('[data-cy="ingredient-main-643d69a5c3f7b9001cfa093e"]').within(
-      () => {
-        cy.contains('Добавить').click({ force: true });
-      }
-    );
+    cy.get(SELECTORS.mainItem).within(() => {
+      cy.contains('Добавить').click({ force: true });
+    });
 
-    cy.get('[data-cy="constructor-top"]').should(
+    cy.get(SELECTORS.constructorTop).should(
       'contain.text',
       'Краторная булка N-200i (верх)'
     );
 
-    cy.get('[data-cy="constructor-list"]').should(
+    cy.get(SELECTORS.constructorList).should(
       'contain.text',
       'Филе Люминесцентного тетраодонтимформа'
     );
 
-    cy.get('[data-cy="constructor-order-button"]').within(() => {
+    cy.get(SELECTORS.constructorOrderBtn).within(() => {
       cy.contains('Оформить заказ').click({ force: true });
     });
 
-    cy.get('[data-cy="modal"]').should('be.visible');
+    cy.get(SELECTORS.modal).should('be.visible');
+    cy.get(SELECTORS.modal).should('contain.text', '1234');
 
-    cy.get('[data-cy="modal"]').should('contain.text', '1234');
+    cy.get(SELECTORS.modalClose).click();
+    cy.get(SELECTORS.modal).should('not.exist');
 
-    cy.get('[data-cy="modal-close-button"]').click();
-
-    cy.get('[data-cy="modal"]').should('not.exist');
-
-    cy.get('[data-cy="constructor-top"]').should(
-      'contain.text',
-      'Выберите булки'
-    );
-
-    cy.get('[data-cy="constructor-list"]').should(
+    cy.get(SELECTORS.constructorTop).should('contain.text', 'Выберите булки');
+    cy.get(SELECTORS.constructorList).should(
       'contain.text',
       'Выберите начинку'
     );
